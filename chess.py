@@ -82,7 +82,7 @@ def show_moves(moves):
                     if movePossible:
                         possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2,(loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
                         possiblePositions.append(loop)
-                
+
             elif currentCharacter=='k' or currentCharacter=='k':
                 for i in range(3):
                     for j in range(3):
@@ -91,14 +91,14 @@ def show_moves(moves):
                             possiblePositions.append(loop)
 
             elif currentCharacter=='p' or currentCharacter=='P':
-                if (coords[1] == 1 and currentCharacter=='p'):
+                if (coords[0] == 1 and currentCharacter=='p'):
                     if board[loop[0]][loop[1]] == '*' and board[loop[0]+1][loop[1]] == '*':
                         possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2, (loop[1])*100+98,(loop[0]+1)*100+98,outline="green",width=4))
                         possiblePositions.extend([loop, (loop[0]+1, loop[1])])
                     if board[loop[0]][loop[1]] == '*':
                         possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2, (loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
                         possiblePositions.append(loop)
-                elif (coords[1] == 6 and currentCharacter=='P'):
+                elif (coords[0] == 6 and currentCharacter=='P'):
                     if board[loop[0]][loop[1]] == '*' and board[loop[0]-1][loop[1]] == '*':
                         possible.append(can.create_rectangle((loop[1])*100+2,(loop[0]-1)*100+2, (loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
                         possiblePositions.extend([loop, (loop[0]-1, loop[1])])
