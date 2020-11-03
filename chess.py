@@ -10,6 +10,7 @@ possiblePositions=[]
 board=[["*" for lopp in range(8)] for loop in range(8)]
 board[0]=["r","n","b","q","k","b","n","r"]
 board[1]=["p" for loop in range(8)]
+board[1][0]="*"
 board[6]=["P" for loop in range(8)]
 board[7]=["R","N","B","Q","K","B","N","R"]
 
@@ -48,16 +49,49 @@ def get_moves(position):
             moves.append((loop[0]+position[1],loop[1]+position[0]))
     return moves
 
+def signOf(number):
+    if number > 0:
+        return 1
+    return -1
+
 def show_moves(moves):
     global possible,lastCoords,possiblePositions,board
     coords=((lastCoords[0]-2)//100,(lastCoords[1]-2)//100)
     currentCharacter=board[(lastCoords[1]-2)//100][(lastCoords[0]-2)//100]
-    print(coords,currentCharacter)
     possiblePositions=[]
     for loop in moves:
-        possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2,(loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
-        possiblePositions.append(loop)
-        #print(loop)
+        try:
+            if (currentCharacter=="n" and board[loop[0]][loop[1]]=="*") or (currentCharacter=="N" and board[loop[0]][loop[1]]=="*"):
+                possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2,(loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
+                possiblePositions.append(loop)
+            elif currentCharacter=="r" or currentCharacter=="R":
+                moveToX=loop[0]-coords[0]
+                moveToY=loop[1]-coords[1]
+                if moveToX != 0:
+                    movePossible=True
+                    for lopp in range(1,loop[0]-coords[0]+1):
+                        print(coords[0]+lopp,coords[1])
+                        print(board[coords[1]][coords[0]+lopp])
+                        if board[coords[1]][coords[0]+lopp] != "*":
+                            movePossible=False
+
+                if moveToY != 0:
+                    movePossible=True
+                    print(coords,loop)
+                    for lopp in range(1,loop[1]-coords[1]+1):
+                        print(coords[0],coords[1]+lopp)
+                        print(board[coords[1]+lopp][coords[0]])
+                        if board[coords[1]+lopp][coords[0]] != "*":
+                            movePossible=False
+                        
+                if movePossible:
+                    possible.append(can.create_rectangle((loop[0])*100+2,(loop[1])*100+2,(loop[0])*100+98,(loop[1])*100+98,outline="green",width=4))
+                    possiblePositions.append(loop)
+
+            else:
+                pass
+        except:
+            pass
 
 def confirm_case(event):
     global lastCoords,modifiable,possible
