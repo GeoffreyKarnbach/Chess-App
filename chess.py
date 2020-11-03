@@ -10,7 +10,7 @@ possiblePositions=[]
 board=[["*" for lopp in range(8)] for loop in range(8)]
 board[0]=["r","n","b","q","k","b","n","r"]
 board[1]=["p" for loop in range(8)]
-board[1][0]="*"
+board[4][4] = 'k'
 board[6]=["P" for loop in range(8)]
 board[7]=["R","N","B","Q","K","B","N","R"]
 
@@ -87,6 +87,13 @@ def show_moves(moves):
                 if movePossible:
                     possible.append(can.create_rectangle((loop[0])*100+2,(loop[1])*100+2,(loop[0])*100+98,(loop[1])*100+98,outline="green",width=4))
                     possiblePositions.append(loop)
+
+            elif currentCharacter=='k' or currentCharacter=='k':
+                for i in range(3):
+                    for j in range(3):
+                        if board[loop[0]][loop[1]] == '*':
+                            possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2, (loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
+                            possiblePositions.append(loop)
 
             else:
                 pass
