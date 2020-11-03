@@ -16,8 +16,8 @@ board[7]=["R","N","B","Q","K","B","N","R"]
 figures={"p":"pawn1.png","n":"knight1.png","b":"bishop1.png","r":"rooks1.png","q":"queen1.png","k":"king1.png",\
         "P":"pawn2.png","N":"knight2.png","B":"bishop2.png","R":"rooks2.png","Q":"queen2.png","K":"king2.png"}
 
-possibleMoves={"P":[(-1,0),(-2,0)],\
-               "p":[(1,0),(2,0)],\
+possibleMoves={"P":[(-1,0)],\
+               "p":[(1,0)],\
                "n":[(1,2),(-1,2),(1,-2),(-1,-2),(2,1),(-2,1),(2,-1),(-2,-1),],\
                "N":[(1,2),(-1,2),(1,-2),(-1,-2),(2,1),(-2,1),(2,-1),(-2,-1),],\
                "b":[(-8,-8),(-7,-7),(-6,-6),(-5,-5),(-4,-4),(-3,-3),(-2,-2),(-1,-1),(+1,+1),(+2,+2),(+3,+3),(+4,+4),(+5,+5),(+6,+6),(+7,+7),(+8,+8),\
@@ -89,6 +89,21 @@ def show_moves(moves):
                         if board[loop[0]][loop[1]] == '*':
                             possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2, (loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
                             possiblePositions.append(loop)
+
+            elif currentCharacter=='p' or currentCharacter=='P':
+                if (coords[1] == 1 and currentCharacter=='p'):
+                    if board[loop[0]][loop[1]] == '*' and board[loop[0]+1][loop[1]] == '*':
+                        possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2, (loop[1])*100+98,(loop[0]+1)*100+98,outline="green",width=4))
+                    if board[loop[0]][loop[1]] == '*':
+                        possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2, (loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
+                elif (coords[1] == 6 and currentCharacter=='P'):
+                    if board[loop[0]][loop[1]] == '*' and board[loop[0]-1][loop[1]] == '*':
+                        possible.append(can.create_rectangle((loop[1])*100+2,(loop[0]-1)*100+2, (loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
+                    elif board[loop[0]][loop[1]] == '*':
+                        possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2, (loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
+                else:
+                    if board[loop[0]][loop[1]] == '*':
+                        possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2, (loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
 
             else:
                 pass
