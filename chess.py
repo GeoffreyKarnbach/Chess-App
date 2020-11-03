@@ -1,5 +1,4 @@
 from tkinter import*
-import re
 
 lastRect=0
 lastCoords=[]
@@ -85,13 +84,22 @@ def parse_fen(fenString):
                 lines[i][j] = '*'
     return lines
 #Converts array to FEN string to send to server
-#NOT WORKING
-""" def parse_board(board):
+def parse_board(board):
     fen = ''
     for i in range(8):
+        star = 0
         for j in range(8):
-            fen+=board[i][j]
-    return fen """
+            if board[i][j] == '*':
+                star+=1
+            elif star == 0:
+                fen+=board[i][j]
+            if star != 0:
+                if board[i][j] != '*' or j == 7:
+                    fen+=str(star)
+                    star = 0
+        if i != 7:
+            fen+='/'
+    return fen
 
 def click(event):
     global lastRect,lastCoords,modifiable,possiblePositions
