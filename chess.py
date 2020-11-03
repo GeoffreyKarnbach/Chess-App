@@ -10,9 +10,6 @@ possiblePositions=[]
 board=[["*" for lopp in range(8)] for loop in range(8)]
 board[0]=["r","n","b","q","k","b","n","r"]
 board[1]=["p" for loop in range(8)]
-board[1][0]="*"
-board[1][7]="*"
-board[2][4] = 'k'
 board[6]=["P" for loop in range(8)]
 board[7]=["R","N","B","Q","K","B","N","R"]
 
@@ -66,19 +63,26 @@ def show_moves(moves):
             if (currentCharacter=="n" and board[loop[0]][loop[1]]=="*") or (currentCharacter=="N" and board[loop[0]][loop[1]]=="*"):
                 possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2,(loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
                 possiblePositions.append(loop)
+
             elif currentCharacter=="r" or currentCharacter=="R":
-                print(loop,coords)
                 x,y=loop[0]-coords[0],loop[1]-coords[1]
                 if x!=0:
                     movePossible=True
                     for lopp in range(1,abs(x)+1):
-                        print(board[coords[0]+lopp][loop[1]])
-                        if board[coords[0]+lopp][loop[1]] != "*":
+                        if board[coords[0]+(lopp*signOf(x))][loop[1]] != "*":
                             movePossible=False
                     if movePossible:
                         possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2,(loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
                         possiblePositions.append(loop)
-
+                elif y!=0:
+                    movePossible=True
+                    for lopp in range(1,abs(y)+1):
+                        if board[loop[0]][coords[1]+(lopp*signOf(y))] != "*":
+                            movePossible=False
+                    if movePossible:
+                        possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2,(loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
+                        possiblePositions.append(loop)
+                
             elif currentCharacter=='k' or currentCharacter=='k':
                 for i in range(3):
                     for j in range(3):
