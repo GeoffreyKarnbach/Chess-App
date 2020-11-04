@@ -1,4 +1,5 @@
 from tkinter import*
+import pyperclip
 
 lastRect=0
 lastCoords=[]
@@ -6,12 +7,14 @@ modifiable=True
 imagesRefs=[]
 possible=[]
 possiblePositions=[]
+imagesGUI=[]
 
 board=[["*" for lopp in range(8)] for loop in range(8)]
 board[0]=["r","n","b","q","k","b","n","r"]
 #board[1]=["p" for loop in range(8)]
 #board[6]=["P" for loop in range(8)]
 board[7]=["R","N","B","Q","K","B","N","R"]
+
 
 figures={"p":"pawn1.png","n":"knight1.png","b":"bishop1.png","r":"rooks1.png","q":"queen1.png","k":"king1.png",\
         "P":"pawn2.png","N":"knight2.png","B":"bishop2.png","R":"rooks2.png","Q":"queen2.png","K":"king2.png"}
@@ -217,13 +220,14 @@ def click(event):
 
 
 def update_UI(board):
-    global imagesRefs
+    global imagesRefs,imagesGUI
     for loop in range(8):
         for lopp in range(8):
             try:
                 fileName="Images/"+figures[board[loop][lopp]]
                 imagesRefs.append(PhotoImage(file=fileName))
-                can.create_image(lopp*100+20,loop*100+20,image=imagesRefs[-1],anchor=NW)
+                imagesGUI.append(can.create_image(lopp*100+20,loop*100+20,image=imagesRefs[-1],anchor=NW))
+                
             except:
                 pass
 
@@ -238,16 +242,46 @@ def draw_board():
             can.create_rectangle(lopp*100,loop*100,lopp*100+100,loop*100+100,fill=colors[current])
             current=(current+1)%2
 
+
+
+def clear_images():
+    global imagesGUI
+    for loop in imagesGUI:
+        can.delete(loop)
+    imagesGUI=[]
+
+def import_board():
+    global board
+    new_board=pyperclip.paste()
+    print(new_board)
+    board=eval(new_board)
+    clear_images()
+    update_UI(board)
+
+def reset_board():
+    global board
+    board=[["*" for lopp in range(8)] for loop in range(8)]
+    board[0]=["r","n","b","q","k","b","n","r"]
+    board[1]=["p" for loop in range(8)]
+    board[6]=["P" for loop in range(8)]
+    board[7]=["R","N","B","Q","K","B","N","R"]
+    clear_images()
+    update_UI(board)
+
+
 window=Tk()
 window.title("Chess")
-window.geometry("850x850")
+window.geometry("850x900")
 window.config(bg="grey")
 
 can=Canvas(window,width=797,height=797,bg="grey")
-can.grid(column=0,row=0,padx=25,pady=25)
+can.grid(column=0,row=0,padx=25,pady=25,columnspan=2)
 
 draw_board()
 update_UI(board)
+
+Button(window,text="Import board",command = import_board).grid(column=0,row=1,padx=10,pady=10)
+Button(window,text="Reset board",command = reset_board).grid(column=1,row=1,padx=10,pady=10)
 
 can.bind("<Button-1>",click)
 window.bind("<Return>", confirm_case)
