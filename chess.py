@@ -98,7 +98,8 @@ def show_moves(moves):
                             possiblePositions.append(loop)
                     else:
                         if board[loop[0]][loop[1]] == '*':
-                            possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2, (loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))      
+                            possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2, (loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
+                            possiblePositions.append(loop)      
                 else:
                     pass
             except:
@@ -222,17 +223,28 @@ def click(event):
     global lastRect,lastCoords,modifiable,possiblePositions,lastClicked
     if modifiable:
         if [(event.x//100)*100+2,(event.y//100)*100+2,(event.x//100)*100+98,(event.y//100)*100+98] == lastCoords:
-            lastClicked=(event.x//100,event.y//100)
+            lastClicked=[]
             can.delete(lastRect)
             lastCoords=[]
         else:
+            lastClicked=[event.y//100,event.x//100]
             can.delete(lastRect)
             lastRect=can.create_rectangle((event.x//100)*100+2,(event.y//100)*100+2,(event.x//100)*100+98,(event.y//100)*100+98,outline="red",width=4)
             lastCoords=[(event.x//100)*100+2,(event.y//100)*100+2,(event.x//100)*100+98,(event.y//100)*100+98]
     else:
         print(event.x//100,event.y//100,possiblePositions)
         if (event.y//100,event.x//100) in possiblePositions:
-            print("Valid move",lastClicked)
+            print("Valid move from ",lastClicked," to ",[event.y//100,event.x//100])
+            board[event.y//100][event.x//100]=board[lastClicked[0]][lastClicked[1]]
+            board[lastClicked[0]][lastClicked[1]]="*"
+            lastClicked=[]
+            can.delete(lastRect)
+            for loop in possible:
+                can.delete(loop)
+            lastCoords=[]
+            modifiable=True
+            clear_images()
+            update_UI(board)
         else:
             print("Non valid move")
 
