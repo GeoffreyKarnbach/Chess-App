@@ -9,6 +9,8 @@ possible=[]
 possiblePositions=[]
 imagesGUI=[]
 
+lastClicked=[]
+
 board=[["*" for lopp in range(8)] for loop in range(8)]
 board[0]=["r","n","b","q","k","b","n","r"]
 board[1]=["p" for loop in range(8)]
