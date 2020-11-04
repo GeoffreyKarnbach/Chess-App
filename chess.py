@@ -128,7 +128,7 @@ def confirm_case(event):
     else:
         print("Select a case before confirming")
 
-#Converts FEN string to array usable to draw board in tkinter
+#Converts FEN string to array usable to draw board in tkinter | TODO: add who is playing at the end
 def parse_fen(fenString):
     lines = fenString.split(' ')[0].split('/')
     for i in range(len(lines)):
@@ -139,7 +139,7 @@ def parse_fen(fenString):
                     lines[i].insert(j+1, '*')
                 lines[i][j] = '*'
     return lines
-#Converts array to FEN string to send to server
+#Converts array to FEN string to send to server | TODO: add who is playing at the end
 def parse_board(board):
     fen = ''
     for i in range(8):
