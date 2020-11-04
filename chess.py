@@ -12,6 +12,7 @@ imagesGUI=[]
 board=[["*" for lopp in range(8)] for loop in range(8)]
 board[0]=["r","n","b","q","k","b","n","r"]
 #board[1]=["p" for loop in range(8)]
+board[4][4] = 'B'
 #board[6]=["P" for loop in range(8)]
 board[7]=["R","N","B","Q","K","B","N","R"]
 
@@ -148,17 +149,18 @@ def show_moves(moves):
         #BISHOP | TODO: not working
         try:
             if currentCharacter=='b':
-                for bmove in possibleMoves['B']:
+                for bmove in possibleMoves['b']:
                     r = 1
                     while r < 8 and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*':
                         possible.append(can.create_rectangle((r*bmove[1]+coords[1])*100+2,(r*bmove[0]+coords[0])*100+2, (r*bmove[1]+coords[1])*100+98,(r*bmove[0]+coords[0])*100+98,outline="green",width=4))
-                        
+                        possiblePositions.append((r*bmove[0]+coords[0],r*bmove[1]+coords[1]))
                         r+=1
             elif currentCharacter=='B':
                 for bmove in possibleMoves['B']:
                     r = 1
                     while r < 8 and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*':
                         possible.append(can.create_rectangle((r*bmove[1]+coords[1])*100+2,(r*bmove[0]+coords[0])*100+2, (r*bmove[1]+coords[1])*100+98,(r*bmove[0]+coords[0])*100+98,outline="green",width=4))
+                        possiblePositions.append((r*bmove[0]+coords[0],r*bmove[1]+coords[1]))
                         r+=1
         except:
             pass
