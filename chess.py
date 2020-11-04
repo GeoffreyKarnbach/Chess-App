@@ -196,9 +196,10 @@ def parse_board(board):
     return fen
 
 def click(event):
-    global lastRect,lastCoords,modifiable,possiblePositions
+    global lastRect,lastCoords,modifiable,possiblePositions,lastClicked
     if modifiable:
         if [(event.x//100)*100+2,(event.y//100)*100+2,(event.x//100)*100+98,(event.y//100)*100+98] == lastCoords:
+            lastClicked=(event.x//100,event.y//100)
             can.delete(lastRect)
             lastCoords=[]
         else:
@@ -208,7 +209,7 @@ def click(event):
     else:
         print(event.x//100,event.y//100,possiblePositions)
         if (event.y//100,event.x//100) in possiblePositions:
-            print("Valid move")
+            print("Valid move",lastClicked)
         else:
             print("Non valid move")
 
