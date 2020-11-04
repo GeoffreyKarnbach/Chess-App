@@ -190,7 +190,6 @@ def update_UI(board):
             except:
                 pass
 
-
 def draw_board():
     colors=["#f2d08a","white"]
     offset,current=0,0
@@ -200,8 +199,6 @@ def draw_board():
         for lopp in range(8):
             can.create_rectangle(lopp*100,loop*100,lopp*100+100,loop*100+100,fill=colors[current])
             current=(current+1)%2
-
-
 
 def clear_images():
     global imagesGUI
