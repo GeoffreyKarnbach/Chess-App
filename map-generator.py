@@ -50,7 +50,7 @@ def parse_board(board):
     return fen
 
 def copy_to_clipboard():
-    pyperclip.copy("board="+str(board))
+    pyperclip.copy(str(board))
 
 def click(event):
     global indexes,characters,board
