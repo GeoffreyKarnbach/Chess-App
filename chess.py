@@ -35,14 +35,14 @@ possibleMoves={"P":[(-1,0)],\
                    (0,1),(0,-1)],\
                "k":[(0,1),(0,-1),(1,0),(-1,0),(1,1),(-1,-1),(1,-1),(-1,1)],\
                "K":[(0,1),(0,-1),(1,0),(-1,0),(1,1),(-1,-1),(1,-1),(-1,1)],\
-               "q":[(-8,-8),(-7,-7),(-6,-6),(-5,-5),(-4,-4),(-3,-3),(-2,-2),(-1,-1),(+1,+1),(+2,+2),(+3,+3),(+4,+4),(+5,+5),(+6,+6),(+7,+7),(+8,+8),\
-                    (+8,-8),(+7,-7),(+6,-6),(+5,-5),(+4,-4),(+3,-3),(+2,-2),(+1,-1),(-1,+1),(-2,+2),(-3,+3),(-4,+4),(-5,+5),(-6,+6),(-7,+7),(-8,+8),\
-                    (1,0),(2,0),(3,0),(4,0),(5,0),(6,0),(7,0),(8,0),(-1,0),(-2,0),(-3,0),(-4,0),(-5,0),(-6,0),(-7,0),(-8,0),\
-                    (0,1),(0,2),(0,3),(0,4),(0,5),(0,6),(0,7),(0,8),(0,-1),(0,-2),(0,-3),(0,-4),(0,-5),(0,-6),(0,-7),(0,-8)],
-               "Q":[(-8,-8),(-7,-7),(-6,-6),(-5,-5),(-4,-4),(-3,-3),(-2,-2),(-1,-1),(+1,+1),(+2,+2),(+3,+3),(+4,+4),(+5,+5),(+6,+6),(+7,+7),(+8,+8),\
-                    (+8,-8),(+7,-7),(+6,-6),(+5,-5),(+4,-4),(+3,-3),(+2,-2),(+1,-1),(-1,+1),(-2,+2),(-3,+3),(-4,+4),(-5,+5),(-6,+6),(-7,+7),(-8,+8),\
-                    (1,0),(2,0),(3,0),(4,0),(5,0),(6,0),(7,0),(8,0),(-1,0),(-2,0),(-3,0),(-4,0),(-5,0),(-6,0),(-7,0),(-8,0),\
-                    (0,1),(0,2),(0,3),(0,4),(0,5),(0,6),(0,7),(0,8),(0,-1),(0,-2),(0,-3),(0,-4),(0,-5),(0,-6),(0,-7),(0,-8)]}
+               "q":[(-1,-1),(+1,+1),\
+                    (+1,-1),(-1,+1),\
+                    (1,0),(-1,0),\
+                    (0,1),(0,-1)],
+               "Q":[(-1,-1),(+1,+1),\
+                    (+1,-1),(-1,+1),\
+                    (1,0),(-1,0),\
+                    (0,1),(0,-1)]}
 
 def get_moves(position):
     global board
@@ -64,7 +64,7 @@ def show_moves(moves):
     coords=((lastCoords[1]-2)//100,(lastCoords[0]-2)//100)
     currentCharacter=board[(lastCoords[1]-2)//100][(lastCoords[0]-2)//100]
     possiblePositions=[]
-    if currentCharacter != "b" and currentCharacter != "B" and currentCharacter != "r" and currentCharacter != "R":
+    if currentCharacter != "b" and currentCharacter != "B" and currentCharacter != "r" and currentCharacter != "R" and currentCharacter != "q" and currentCharacter != "Q":
         for loop in moves:
             try:
                 #KNIGHT
@@ -141,6 +141,29 @@ def show_moves(moves):
 
         elif currentCharacter=="R":
             for bmove in possibleMoves['R']:
+                r = 1
+                try:
+                    while r < 8 and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*':
+                        possible.append(can.create_rectangle((r*bmove[1]+coords[1])*100+2,(r*bmove[0]+coords[0])*100+2, (r*bmove[1]+coords[1])*100+98,(r*bmove[0]+coords[0])*100+98,outline="green",width=4))
+                        possiblePositions.append((r*bmove[0]+coords[0],r*bmove[1]+coords[1]))
+                        r+=1
+                except:
+                    pass
+
+        #QUEEN
+        elif currentCharacter=="q":
+            for bmove in possibleMoves['q']:
+                r = 1
+                try:
+                    while r < 8 and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*':
+                        possible.append(can.create_rectangle((r*bmove[1]+coords[1])*100+2,(r*bmove[0]+coords[0])*100+2, (r*bmove[1]+coords[1])*100+98,(r*bmove[0]+coords[0])*100+98,outline="green",width=4))
+                        possiblePositions.append((r*bmove[0]+coords[0],r*bmove[1]+coords[1]))
+                        r+=1
+                except:
+                    pass
+
+        elif currentCharacter=="Q":
+            for bmove in possibleMoves['Q']:
                 r = 1
                 try:
                     while r < 8 and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*':
