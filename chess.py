@@ -13,6 +13,7 @@ board[1]=["p" for loop in range(8)]
 board[6]=["P" for loop in range(8)]
 board[7]=["R","N","B","Q","K","B","N","R"]
 
+
 figures={"p":"pawn1.png","n":"knight1.png","b":"bishop1.png","r":"rooks1.png","q":"queen1.png","k":"king1.png",\
         "P":"pawn2.png","N":"knight2.png","B":"bishop2.png","R":"rooks2.png","Q":"queen2.png","K":"king2.png"}
 
