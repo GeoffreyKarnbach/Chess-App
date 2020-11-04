@@ -144,24 +144,31 @@ def show_moves(moves):
             except:
                 pass
     else:
-        
         #BISHOP | TODO: not working
-        try:
-            if currentCharacter=='b':
-                for bmove in possibleMoves['B']:
-                    r = 1
+        if currentCharacter=='b':
+            for bmove in possibleMoves['b']:
+                print(bmove)
+                r = 1
+                try:
                     while r < 8 and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*':
                         possible.append(can.create_rectangle((r*bmove[1]+coords[1])*100+2,(r*bmove[0]+coords[0])*100+2, (r*bmove[1]+coords[1])*100+98,(r*bmove[0]+coords[0])*100+98,outline="green",width=4))
-                        
+                        possiblePositions.append((r*bmove[0]+coords[0],r*bmove[1]+coords[1]))
                         r+=1
-            elif currentCharacter=='B':
-                for bmove in possibleMoves['B']:
-                    r = 1
+                except:
+                    pass
+                
+        elif currentCharacter=='B':
+            for bmove in possibleMoves['B']:
+                print(bmove)
+                r = 1
+                try:
                     while r < 8 and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*':
                         possible.append(can.create_rectangle((r*bmove[1]+coords[1])*100+2,(r*bmove[0]+coords[0])*100+2, (r*bmove[1]+coords[1])*100+98,(r*bmove[0]+coords[0])*100+98,outline="green",width=4))
+                        possiblePositions.append((r*bmove[0]+coords[0],r*bmove[1]+coords[1]))
                         r+=1
-        except:
-            pass
+                except:
+                    pass
+                
 
 
 def confirm_case(event):
