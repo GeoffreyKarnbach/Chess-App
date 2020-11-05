@@ -84,11 +84,12 @@ def rochade(color, side):
             board[4][7] = '*'
             board[1][7] = 'K'
             board[2][7] = 'R'
+    clear_images()
+    update_UI(board)
 
 def rochade_possible(colorID):
     global castlingStillPossible,board
     res=[]
-
     if colorID==0:
         if board[0][1] == "*" and board[0][2] == "*" and board[0][3] == "*" and castlingStillPossible[colorID]:
             res.append(True)
@@ -142,7 +143,7 @@ def show_moves(moves):
                         
                     elif currentCharacter=='K':
                                                 
-                        result=rochade_possible(0)
+                        result=rochade_possible(1)
                         if result[0]:
                             possible.append(can.create_rectangle(0*100+2,7*100+2, 0*100+98,7*100+98,outline="cyan",width=4))
                             possibleRocades.append((7,0))
@@ -418,6 +419,26 @@ def click(event):
             print("Rocades")
         else:
             print("Non valid move")
+
+    alive=False
+    for loop in board:
+        if "k" in loop:
+            alive=True
+
+    if alive:
+        print("OK black")
+    else:
+        print("Lost black")
+
+    alive=False
+    for loop in board:
+        if "K" in loop:
+            alive=True
+            
+    if alive:
+        print("OK white")
+    else:
+        print("Lost white")
 
 
 
