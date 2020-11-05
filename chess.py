@@ -9,6 +9,8 @@ possible=[]
 possiblePositions=[]
 imagesGUI=[]
 
+currentColor = False # false == white, true == white
+
 lastClicked=[]
 
 board=[["*" for lopp in range(8)] for loop in range(8)]
@@ -73,12 +75,10 @@ def show_moves(moves):
                     possiblePositions.append(loop)
 
                 #KING
-                elif currentCharacter=='k' or currentCharacter=='k':
-                    for i in range(3):
-                        for j in range(3):
-                            if board[loop[0]][loop[1]] == '*':
-                                possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2, (loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
-                                possiblePositions.append(loop)
+                elif currentCharacter=='k' or currentCharacter=='K':
+                    if board[loop[0]][loop[1]] == '*':
+                        possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2, (loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
+                        possiblePositions.append(loop)
 
                 #PAWN
                 elif currentCharacter=='p' or currentCharacter=='P':
@@ -175,8 +175,6 @@ def show_moves(moves):
                     pass
                     
                 
-
-
 def confirm_case(event):
     global lastCoords,modifiable,possible
     if lastCoords!=[]:
@@ -189,6 +187,16 @@ def confirm_case(event):
                 can.delete(loop)
     else:
         print("Select a case before confirming")
+
+def check_current_color(piece):
+    global currentColor
+    if currentColor == True and piece.isupper() != True:
+        return True
+    elif currentColor == False and piece.isupper() == True:
+        return True
+    else:
+        return False
+
 
 #Converts FEN string to array usable to draw board in tkinter | TODO: add who is playing at the end
 def parse_fen(fenString):
@@ -220,7 +228,7 @@ def parse_board(board):
     return fen
 
 def click(event):
-    global lastRect,lastCoords,modifiable,possiblePositions,lastClicked
+    global lastRect,lastCoords,modifiable,possiblePositions,lastClicked,currentColor
     if modifiable:
         if [(event.x//100)*100+2,(event.y//100)*100+2,(event.x//100)*100+98,(event.y//100)*100+98] == lastCoords:
             lastClicked=[]
@@ -233,7 +241,7 @@ def click(event):
             lastCoords=[(event.x//100)*100+2,(event.y//100)*100+2,(event.x//100)*100+98,(event.y//100)*100+98]
     else:
         print(event.x//100,event.y//100,possiblePositions)
-        if (event.y//100,event.x//100) in possiblePositions:
+        if (event.y//100,event.x//100) in possiblePositions and check_current_color(board[lastClicked[0]][lastClicked[1]]) == True:
             print("Valid move from ",lastClicked," to ",[event.y//100,event.x//100])
             board[event.y//100][event.x//100]=board[lastClicked[0]][lastClicked[1]]
             board[lastClicked[0]][lastClicked[1]]="*"
@@ -245,6 +253,7 @@ def click(event):
             modifiable=True
             clear_images()
             update_UI(board)
+            currentColor = not currentColor
         else:
             print("Non valid move")
 
@@ -279,15 +288,16 @@ def clear_images():
     imagesGUI=[]
 
 def import_board():
-    global board
+    global board,currentColor
     new_board=pyperclip.paste()
     print(new_board)
     board=eval(new_board)
     clear_images()
     update_UI(board)
+    currentColor = False
 
 def reset_board():
-    global board
+    global board,currentColor
     board=[["*" for lopp in range(8)] for loop in range(8)]
     board[0]=["r","n","b","q","k","b","n","r"]
     board[1]=["p" for loop in range(8)]
@@ -295,6 +305,7 @@ def reset_board():
     board[7]=["R","N","B","Q","K","B","N","R"]
     clear_images()
     update_UI(board)
+    currentColor = False
 
 
 window=Tk()
