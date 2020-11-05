@@ -176,15 +176,16 @@ def show_moves(moves):
                     
                 
 def confirm_case(event):
-    global lastCoords,modifiable,possible
+    global lastCoords,modifiable,possible,currentColor
     if lastCoords!=[]:
-        if modifiable:
-            modifiable=False
-            show_moves(get_moves(((lastCoords[0]-2)//100,(lastCoords[1]-2)//100)))
-        else:
-            modifiable=True
-            for loop in possible:
-                can.delete(loop)
+        if currentColor != board[(lastCoords[1]-2)//100][(lastCoords[0]-2)//100].isupper() and board[(lastCoords[1]-2)//100][(lastCoords[0]-2)//100] != "*":
+            if modifiable:
+                modifiable=False
+                show_moves(get_moves(((lastCoords[0]-2)//100,(lastCoords[1]-2)//100)))
+            else:
+                modifiable=True
+                for loop in possible:
+                    can.delete(loop)
     else:
         print("Select a case before confirming")
 
@@ -254,6 +255,10 @@ def click(event):
             clear_images()
             update_UI(board)
             currentColor = not currentColor
+            if currentColor:
+                currentPlayer.config(text="Current turn: Black")
+            else:
+                currentPlayer.config(text="Current turn: White")
         else:
             print("Non valid move")
 
@@ -314,13 +319,17 @@ window.geometry("850x900")
 window.config(bg="grey")
 
 can=Canvas(window,width=797,height=797,bg="grey")
-can.grid(column=0,row=0,padx=25,pady=25,columnspan=2)
+can.grid(column=0,row=0,padx=25,pady=25,columnspan=3)
 
 draw_board()
 update_UI(board)
 
 Button(window,text="Import board",command = import_board).grid(column=0,row=1,padx=10,pady=10)
-Button(window,text="Reset board",command = reset_board).grid(column=1,row=1,padx=10,pady=10)
+
+currentPlayer=Label(window,text="Current turn: White")
+currentPlayer.grid(column=1,row=1,padx=10,pady=10)
+
+Button(window,text="Reset board",command = reset_board).grid(column=2,row=1,padx=10,pady=10)
 
 can.bind("<Button-1>",click)
 window.bind("<Return>", confirm_case)
