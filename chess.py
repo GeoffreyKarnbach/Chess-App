@@ -63,8 +63,26 @@ def signOf(number):
         return 1
     return -1
 
-def rochade():
-    pass
+def rochade(color, side):
+    global board
+    if side == True:
+        if color == True:
+            board[4][0] = '*'
+            board[6][0] = 'k'
+            board[5][0] = 'r'
+        else:
+            board[4][7] = '*'
+            board[6][7] = 'K'
+            board[5][7] = 'R'
+    else:
+        if color == True:
+            board[4][0] = '*'
+            board[1][0] = 'k'
+            board[2][0] = 'r'
+        else:
+            board[4][7] = '*'
+            board[1][7] = 'K'
+            board[2][7] = 'R'
 
 #SHOWING POSSIBLE MOVES WITH GREEN SQUARES
 def show_moves(moves):
