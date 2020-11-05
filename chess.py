@@ -9,6 +9,9 @@ possible=[]
 possiblePositions=[]
 imagesGUI=[]
 
+castling=[True,True]
+towersMoved=[[] for loop in range(2)]
+
 currentColor = False # false == white, true == white
 
 lastClicked=[]
@@ -59,6 +62,9 @@ def signOf(number):
     if number > 0:
         return 1
     return -1
+
+def rochade():
+    pass
 
 #SHOWING POSSIBLE MOVES WITH GREEN SQUARES
 def show_moves(moves):
@@ -149,7 +155,6 @@ def show_moves(moves):
                     
         elif currentCharacter=='B':
             for bmove in possibleMoves['B']:
-                print(bmove)
                 r = 1
                 try:
                     stillPossible=True
@@ -189,7 +194,6 @@ def show_moves(moves):
                     
         elif currentCharacter=='R':
             for bmove in possibleMoves['R']:
-                print(bmove)
                 r = 1
                 try:
                     stillPossible=True
@@ -229,7 +233,6 @@ def show_moves(moves):
                     
         elif currentCharacter=='Q':
             for bmove in possibleMoves['Q']:
-                print(bmove)
                 r = 1
                 try:
                     stillPossible=True
@@ -301,7 +304,7 @@ def parse_board(board):
     return fen
 
 def click(event):
-    global lastRect,lastCoords,modifiable,possiblePositions,lastClicked,currentColor
+    global lastRect,lastCoords,modifiable,possiblePositions,lastClicked,currentColor,castling,towersMoved
     if modifiable:
         if [(event.x//100)*100+2,(event.y//100)*100+2,(event.x//100)*100+98,(event.y//100)*100+98] == lastCoords:
             lastClicked=[]
@@ -313,9 +316,24 @@ def click(event):
             lastRect=can.create_rectangle((event.x//100)*100+2,(event.y//100)*100+2,(event.x//100)*100+98,(event.y//100)*100+98,outline="red",width=4)
             lastCoords=[(event.x//100)*100+2,(event.y//100)*100+2,(event.x//100)*100+98,(event.y//100)*100+98]
     else:
-        print(event.x//100,event.y//100,possiblePositions)
         if (event.y//100,event.x//100) in possiblePositions and check_current_color(board[lastClicked[0]][lastClicked[1]]) == True:
-            print("Valid move from ",lastClicked," to ",[event.y//100,event.x//100])
+
+            if board[lastClicked[0]][lastClicked[1]] == "k":
+                castling[0]=False
+
+            elif board[lastClicked[0]][lastClicked[1]] == "r" and lastClicked==[0,0] or lastClicked==[0,7]:
+                towersMoved[0].append(lastClicked)
+                if len(towersMoved[0])==2:
+                    castling[0]=False
+                
+            elif board[lastClicked[0]][lastClicked[1]] == "K":
+                castling[1]=False
+            
+            elif board[lastClicked[0]][lastClicked[1]] == "R" and lastClicked==[7,0] or lastClicked==[7,7]:
+                towersMoved[1].append(lastClicked)
+                if len(towersMoved[1])==2:
+                    castling[1]=False
+
             board[event.y//100][event.x//100]=board[lastClicked[0]][lastClicked[1]]
             board[lastClicked[0]][lastClicked[1]]="*"
             lastClicked=[]
@@ -367,7 +385,6 @@ def clear_images():
 def import_board():
     global board,currentColor
     new_board=pyperclip.paste()
-    print(new_board)
     board=eval(new_board)
     clear_images()
     update_UI(board)
