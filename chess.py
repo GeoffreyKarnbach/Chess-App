@@ -7,9 +7,10 @@ modifiable=True
 imagesRefs=[]
 possible=[]
 possiblePositions=[]
+possibleRocades=[]
 imagesGUI=[]
 
-castling=[True,True]
+castlingStillPossible=[True,True]
 towersMoved=[[] for loop in range(2)]
 
 currentColor = False # false == white, true == white
@@ -63,12 +64,34 @@ def signOf(number):
         return 1
     return -1
 
-def rochade():
-    pass
+def rochade_possible(colorID):
+    global castlingStillPossible,board
+    res=[]
+
+    if colorID==0:
+        if board[0][1] == "*" and board[0][2] == "*" and board[0][3] == "*" and castlingStillPossible[colorID]:
+            res.append(True)
+        else:
+            res.append(False)
+        if board[0][5] == "*" and board[0][6] == "*" and castlingStillPossible[colorID]:
+            res.append(True)
+        else:
+            res.append(False)
+    elif colorID == 1:
+        if board[7][1] == "*" and board[7][2] == "*" and board[7][3] == "*" and castlingStillPossible[colorID]:
+            res.append(True)
+        else:
+            res.append(False)
+        if board[7][5] == "*" and board[7][6] == "*" and castlingStillPossible[colorID]:
+            res.append(True)
+        else:
+            res.append(False)
+    return res
+
 
 #SHOWING POSSIBLE MOVES WITH GREEN SQUARES
 def show_moves(moves):
-    global possible,lastCoords,possiblePositions,board,currentColor
+    global possible,lastCoords,possiblePositions,board,currentColor,castlingStillPossible,possibleRocades
     coords=((lastCoords[1]-2)//100,(lastCoords[0]-2)//100)
     currentCharacter=board[(lastCoords[1]-2)//100][(lastCoords[0]-2)//100]
     possiblePositions=[]
@@ -85,6 +108,26 @@ def show_moves(moves):
                     if board[loop[0]][loop[1]] == '*' or currentColor==board[loop[0]][loop[1]].isupper():
                         possible.append(can.create_rectangle((loop[1])*100+2,(loop[0])*100+2, (loop[1])*100+98,(loop[0])*100+98,outline="green",width=4))
                         possiblePositions.append(loop)
+
+                    if currentCharacter=='k':
+
+                        result=rochade_possible(0)
+                        if result[0]:
+                            possible.append(can.create_rectangle(0*100+2,0*100+2, 0*100+98,0*100+98,outline="cyan",width=4))
+                            possibleRocades.append((0,0))
+                        if result[1]:
+                            possible.append(can.create_rectangle(7*100+2,0*100+2, 7*100+98,0*100+98,outline="cyan",width=4))
+                            possibleRocades.append((0,7))
+                        
+                    elif currentCharacter=='K':
+                                                
+                        result=rochade_possible(0)
+                        if result[0]:
+                            possible.append(can.create_rectangle(0*100+2,7*100+2, 0*100+98,7*100+98,outline="cyan",width=4))
+                            possibleRocades.append((7,0))
+                        if result[1]:
+                            possible.append(can.create_rectangle(7*100+2,7*100+2, 7*100+98,7*100+98,outline="cyan",width=4))
+                            possibleRocades.append((7,7))
 
                 #PAWN
                 elif currentCharacter=='p' or currentCharacter=='P':
@@ -304,7 +347,7 @@ def parse_board(board):
     return fen
 
 def click(event):
-    global lastRect,lastCoords,modifiable,possiblePositions,lastClicked,currentColor,castling,towersMoved
+    global lastRect,lastCoords,modifiable,possiblePositions,lastClicked,currentColor,castlingStillPossible,towersMoved,possibleRocades
     if modifiable:
         if [(event.x//100)*100+2,(event.y//100)*100+2,(event.x//100)*100+98,(event.y//100)*100+98] == lastCoords:
             lastClicked=[]
@@ -319,20 +362,20 @@ def click(event):
         if (event.y//100,event.x//100) in possiblePositions and check_current_color(board[lastClicked[0]][lastClicked[1]]) == True:
 
             if board[lastClicked[0]][lastClicked[1]] == "k":
-                castling[0]=False
+                castlingStillPossible[0]=False
 
             elif board[lastClicked[0]][lastClicked[1]] == "r" and lastClicked==[0,0] or lastClicked==[0,7]:
                 towersMoved[0].append(lastClicked)
                 if len(towersMoved[0])==2:
-                    castling[0]=False
+                    castlingStillPossible[0]=False
                 
             elif board[lastClicked[0]][lastClicked[1]] == "K":
-                castling[1]=False
+                castlingStillPossible[1]=False
             
             elif board[lastClicked[0]][lastClicked[1]] == "R" and lastClicked==[7,0] or lastClicked==[7,7]:
                 towersMoved[1].append(lastClicked)
                 if len(towersMoved[1])==2:
-                    castling[1]=False
+                    castlingStillPossible[1]=False
 
             board[event.y//100][event.x//100]=board[lastClicked[0]][lastClicked[1]]
             board[lastClicked[0]][lastClicked[1]]="*"
@@ -342,6 +385,7 @@ def click(event):
                 can.delete(loop)
             lastCoords=[]
             modifiable=True
+            possibleRocades=[]
             clear_images()
             update_UI(board)
             currentColor = not currentColor
@@ -349,6 +393,8 @@ def click(event):
                 currentPlayer.config(text="Current turn: Black")
             else:
                 currentPlayer.config(text="Current turn: White")
+        if (event.y//100,event.x//100) in possibleRocades and check_current_color(board[lastClicked[0]][lastClicked[1]]) == True:
+            print("Rocades")
         else:
             print("Non valid move")
 
