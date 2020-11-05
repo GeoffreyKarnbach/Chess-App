@@ -134,14 +134,16 @@ def show_moves(moves):
                     stillPossible=True
                     while r < 8 and (board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*' or currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper()) and (r*bmove[0]+coords[0])>-1 and (r*bmove[0]+coords[0])<8 and (r*bmove[1]+coords[1]) > -1 and (r*bmove[1]+coords[1]) <8:
                         
-                        
+                        if currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper() and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] != '*' and stillPossible:
+                            stillPossible=False
+
                         possible.append(can.create_rectangle((r*bmove[1]+coords[1])*100+2,(r*bmove[0]+coords[0])*100+2, (r*bmove[1]+coords[1])*100+98,(r*bmove[0]+coords[0])*100+98,outline="green",width=4))
                         possiblePositions.append((r*bmove[0]+coords[0],r*bmove[1]+coords[1]))
                         r+=1
+
                         if not stillPossible:
                             break
-                        if currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper() and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] != '*':
-                            stillPossible=False
+                        
                 except: 
                     pass
                     
@@ -152,13 +154,17 @@ def show_moves(moves):
                 try:
                     stillPossible=True
                     while r < 8 and (board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*' or currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper()) and (r*bmove[0]+coords[0])>-1 and (r*bmove[0]+coords[0])<8 and (r*bmove[1]+coords[1]) > -1 and (r*bmove[1]+coords[1]) <8:
+                        
+                        if currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper() and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] != '*' and stillPossible:
+                            stillPossible=False
+
                         possible.append(can.create_rectangle((r*bmove[1]+coords[1])*100+2,(r*bmove[0]+coords[0])*100+2, (r*bmove[1]+coords[1])*100+98,(r*bmove[0]+coords[0])*100+98,outline="green",width=4))
                         possiblePositions.append((r*bmove[0]+coords[0],r*bmove[1]+coords[1]))
                         r+=1
+                        
                         if not stillPossible:
                             break
-                        if currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper() and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] != '*':
-                            stillPossible=False
+                        
                 except: 
                     pass
         #ROOK
@@ -169,13 +175,15 @@ def show_moves(moves):
                     stillPossible=True
                     while r < 8 and (board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*' or currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper()) and (r*bmove[0]+coords[0])>-1 and (r*bmove[0]+coords[0])<8 and (r*bmove[1]+coords[1]) > -1 and (r*bmove[1]+coords[1]) <8:
                         
+                        if currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper() and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] != '*' and stillPossible:
+                            stillPossible=False
+
                         possible.append(can.create_rectangle((r*bmove[1]+coords[1])*100+2,(r*bmove[0]+coords[0])*100+2, (r*bmove[1]+coords[1])*100+98,(r*bmove[0]+coords[0])*100+98,outline="green",width=4))
                         possiblePositions.append((r*bmove[0]+coords[0],r*bmove[1]+coords[1]))
                         r+=1
+                        
                         if not stillPossible:
                             break
-                        if currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper() and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] != '*':
-                            stillPossible=False
                 except: 
                     pass
                     
@@ -187,37 +195,55 @@ def show_moves(moves):
                     stillPossible=True
                     while r < 8 and (board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*' or currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper()) and (r*bmove[0]+coords[0])>-1 and (r*bmove[0]+coords[0])<8 and (r*bmove[1]+coords[1]) > -1 and (r*bmove[1]+coords[1]) <8:
                         
+                        if currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper() and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] != '*' and stillPossible:
+                            stillPossible=False
+
                         possible.append(can.create_rectangle((r*bmove[1]+coords[1])*100+2,(r*bmove[0]+coords[0])*100+2, (r*bmove[1]+coords[1])*100+98,(r*bmove[0]+coords[0])*100+98,outline="green",width=4))
                         possiblePositions.append((r*bmove[0]+coords[0],r*bmove[1]+coords[1]))
                         r+=1
+                        
                         if not stillPossible:
                             break
-                        if currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper() and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] != '*':
-                            stillPossible=False
                 except: 
                     pass
 
         #QUEEN
-        elif currentCharacter=="q":
+        if currentCharacter=='q':
             for bmove in possibleMoves['q']:
                 r = 1
                 try:
-                    while r < 8 and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*':
+                    stillPossible=True
+                    while r < 8 and (board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*' or currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper()) and (r*bmove[0]+coords[0])>-1 and (r*bmove[0]+coords[0])<8 and (r*bmove[1]+coords[1]) > -1 and (r*bmove[1]+coords[1]) <8:
+                        
+                        if currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper() and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] != '*' and stillPossible:
+                            stillPossible=False
+
                         possible.append(can.create_rectangle((r*bmove[1]+coords[1])*100+2,(r*bmove[0]+coords[0])*100+2, (r*bmove[1]+coords[1])*100+98,(r*bmove[0]+coords[0])*100+98,outline="green",width=4))
                         possiblePositions.append((r*bmove[0]+coords[0],r*bmove[1]+coords[1]))
                         r+=1
-                except:
+                        
+                        if not stillPossible:
+                            break
+                except: 
                     pass
-
-        elif currentCharacter=="Q":
+                    
+        elif currentCharacter=='Q':
             for bmove in possibleMoves['Q']:
+                print(bmove)
                 r = 1
                 try:
-                    while r < 8 and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*':
+                    stillPossible=True
+                    while r < 8 and (board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] == '*' or currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper()) and (r*bmove[0]+coords[0])>-1 and (r*bmove[0]+coords[0])<8 and (r*bmove[1]+coords[1]) > -1 and (r*bmove[1]+coords[1]) <8:
+                        if currentColor==board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]].isupper() and board[r*bmove[0]+coords[0]][r*bmove[1]+coords[1]] != '*' and stillPossible:
+                            stillPossible=False
+
                         possible.append(can.create_rectangle((r*bmove[1]+coords[1])*100+2,(r*bmove[0]+coords[0])*100+2, (r*bmove[1]+coords[1])*100+98,(r*bmove[0]+coords[0])*100+98,outline="green",width=4))
                         possiblePositions.append((r*bmove[0]+coords[0],r*bmove[1]+coords[1]))
                         r+=1
-                except:
+                        
+                        if not stillPossible:
+                            break
+                except: 
                     pass
                     
                 
