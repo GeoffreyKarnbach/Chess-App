@@ -69,24 +69,26 @@ def rochade(color, side):
     if side == True:
         if color == True:
             board[0][4] = '*'
-            board[0][6] = 'k'
             board[0][5] = 'r'
+            board[0][6] = 'k'
             board[0][7] = '*'
         else:
             board[7][4] = '*'
-            board[7][6] = 'K'
             board[7][5] = 'R'
+            board[7][6] = 'K'
             board[7][7] = '*'
     else:
         if color == True:
             board[0][4] = '*'
-            board[0][1] = 'k'
-            board[0][2] = 'r'
+            board[0][3] = 'r'
+            board[0][2] = 'k'
+            board[0][1] = '*'
             board[0][0] = '*'
         else:
             board[7][4] = '*'
-            board[7][1] = 'K'
-            board[7][2] = 'R'
+            board[7][3] = 'R'
+            board[7][2] = 'K'
+            board[7][1] = '*'
             board[7][0] = '*'
     clear_images()
     update_UI(board)
@@ -420,7 +422,28 @@ def click(event):
             else:
                 currentPlayer.config(text="Current turn: White")
         if (event.y//100,event.x//100) in possibleRocades and check_current_color(board[lastClicked[0]][lastClicked[1]]) == True:
-            print("Rocades")
+            if board[event.y//100][event.x//100].isupper():
+                if event.x//100 == 7:
+                    rochade(False,True)
+                else:
+                    rochade(False,False)
+            else:
+                if event.x//100 == 7:
+                    rochade(True,True)
+                else:
+                    rochade(True,False)
+            lastClicked=[]
+            can.delete(lastRect)
+            for loop in possible:
+                can.delete(loop)
+            lastCoords=[]
+            modifiable=True
+            possibleRocades=[]
+            currentColor = not currentColor
+            if currentColor:
+                currentPlayer.config(text="Current turn: Black")
+            else:
+                currentPlayer.config(text="Current turn: White")
         else:
             print("Non valid move")
 
