@@ -492,11 +492,12 @@ def parse_board(board): # CASTLING
         for j in range(8):
             if board[i][j] == '*':
                 star+=1
-            elif star == 0:
+            elif star == 0 and board[i][j] != '*':
                 fen+=board[i][j]
-            if star != 0:
+            elif star != 0 and board[i][j] != '*':
                 if board[i][j] != '*' or j == 7:
                     fen+=str(star)
+                    fen+=board[i][j]
                     star = 0
         if i != 7:
             fen+='/'
