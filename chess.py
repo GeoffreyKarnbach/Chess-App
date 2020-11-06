@@ -25,7 +25,7 @@ castlingStillPossible=[True,True]
 towersMoved=[[] for loop in range(2)]
 gameOver=False
 
-currentColor = False # false == white, true == white
+currentColor = False # false == white, true == black
 
 lastClicked=[]
 
