@@ -3,8 +3,12 @@
 from tkinter import*
 import pyperclip
 from tkinter.messagebox import*
+import socketio
+import sys
 
 ################## VARIABLES #############
+
+#### UI ####
 lastRect=0
 lastCoords=[]
 modifiable=True
@@ -22,13 +26,18 @@ currentColor = False # false == white, true == white
 
 lastClicked=[]
 
-##### CONSTANTS #######
 board=[["*" for lopp in range(8)] for loop in range(8)]
 board[0]=["r","n","b","q","k","b","n","r"]
 board[1]=["p" for loop in range(8)]
 board[6]=["P" for loop in range(8)]
 board[7]=["R","N","B","Q","K","B","N","R"]
 
+#### NETWORK #####
+
+gameID=""
+
+
+##### CONSTANTS #######
 
 figures={"p":"pawn1.png","n":"knight1.png","b":"bishop1.png","r":"rooks1.png","q":"queen1.png","k":"king1.png",\
         "P":"pawn2.png","N":"knight2.png","B":"bishop2.png","R":"rooks2.png","Q":"queen2.png","K":"king2.png"}
@@ -55,6 +64,16 @@ possibleMoves={"P":[(-1,0)],\
                     (+1,-1),(-1,+1),\
                     (1,0),(-1,0),\
                     (0,1),(0,-1)]}
+
+
+######################## JOIN UI ######################
+
+def join_window():
+
+    pass
+
+def cancel_game():
+    sys.exit("No game joined but join window closed.")
 
 ##################### GAME FUNCTION ###############
 
@@ -381,8 +400,6 @@ def confirm_case(event):
                 modifiable=True
                 for loop in possible:
                     can.delete(loop)
-    else:
-        print("Select a case before confirming")
 
 def check_current_color(piece):
 
@@ -397,7 +414,7 @@ def check_current_color(piece):
         return False
 
 
-def parse_fen(fenString):
+def parse_fen(fenString): # GASTLING
     global currentColor
     #Converts FEN string to array usable to draw board in tkinter
     splitString = fenString.split(' ')
@@ -417,7 +434,7 @@ def parse_fen(fenString):
                 lines[i][j] = '*'
     return lines
 
-def parse_board(board):
+def parse_board(board): # GASTLING
 
     #Converts array to FEN string to send to server
 
@@ -523,8 +540,6 @@ def click(event):
                 currentPlayer.config(text="Current turn: Black")
             else:
                 currentPlayer.config(text="Current turn: White")
-        else:
-            print("Non valid move")
 
     alive=False
     for loop in board:
@@ -561,7 +576,6 @@ def update_UI(board):
 
     global imagesRefs,imagesGUI
 
-    print(board)
     for loop in range(8):
         for lopp in range(8):
             try:
@@ -605,6 +619,17 @@ def import_board():
     update_UI(board)
     currentColor = False
 
+def import_fen(fenString):
+    global board
+    board=parse_fen(fenString)
+    clear_images()
+    update_UI(board)
+
+def send_fen():
+    global board
+    newFen=parse_board(board)
+    print(newFen)
+
 def reset_board():
 
     # Resets the entire board
@@ -618,6 +643,24 @@ def reset_board():
     clear_images()
     update_UI(board)
     currentColor = False
+
+############## JOIN UI ##############
+
+window2=Tk()
+window2.title("Server connection")
+
+Label(window2,text="Game ID: ").grid(column=0,row=0,padx=10,pady=10)
+gameIdString=StringVar()
+Entry(window2,textvariable=gameIdString,width=30).grid(column=1,row=0,padx=10,pady=10)
+Button(window2,text="Connect to this game ID",width=35).grid(column=0,row=1,columnspan=2,padx=10,pady=10)
+Button(window2,text="Create new game",width=35).grid(column=0,row=2,columnspan=2,padx=10,pady=10)
+
+window2.mainloop()
+
+########### CANCEL MAIN GAME ############
+
+if gameID == "":
+    cancel_game()
 
 ########### MAIN UI PART ##############
 
