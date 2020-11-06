@@ -397,7 +397,6 @@ def check_current_color(piece):
         return False
 
 
-
 def parse_fen(fenString):
     global currentColor
     #Converts FEN string to array usable to draw board in tkinter
@@ -477,8 +476,15 @@ def click(event):
                 towersMoved[1].append(lastClicked)
                 if len(towersMoved[1])==2:
                     castlingStillPossible[1]=False
-
+                
             board[event.y//100][event.x//100]=board[lastClicked[0]][lastClicked[1]]
+
+            if board[lastClicked[0]][lastClicked[1]] == "p" and event.y//100==7:
+                board[event.y//100][event.x//100]="q"
+            elif board[lastClicked[0]][lastClicked[1]] == "P" and event.y//100==0:
+                board[event.y//100][event.x//100]="Q"
+
+
             board[lastClicked[0]][lastClicked[1]]="*"
             lastClicked=[]
             can.delete(lastRect)
