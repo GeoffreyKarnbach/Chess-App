@@ -42,7 +42,6 @@ playerColor = ''
 sio = socketio.Client()
 sio.connect('http://193.80.95.47:8080/')
 
-
 ##### CONSTANTS #######
 
 figures={"p":"pawn1.png","n":"knight1.png","b":"bishop1.png","r":"rooks1.png","q":"queen1.png","k":"king1.png",\
@@ -74,59 +73,47 @@ possibleMoves={"P":[(-1,0)],\
 
 ######################## JOIN UI ######################
 
-def join_window():
-    pass
-
 def cancel_game():
+    sio.disconnect()
     sys.exit("No game joined but join window closed.")
-
-def request_to_server_new_game():
-    global gameID
-    print("Asking server for new ID")
-    gameID="2"
-    window2.destroy()
     
 def confirm_game_id():
-    global gameID
-    print(gameIdString.get())
-    gameID="2"
-    window2.destroy()
+    join_game(gameIdString.get())
 
 ##################### SOCKET HANDLING #############
 
 def join_game(id):
-    sio.emit('joined', {id})
+    sio.emit('joined', {'roomId':id})
 
 def create_game():
     sio.emit('create', {'t':'t'})
 
 @sio.on('roomIdMsg')
 def on_message(data):
-    global gameID
+    global gameID,join_game
     gameID = data
+    join_game(gameID)
+    print("Game ID ",gameID)
 
 @sio.on('color')
 def on_message(data):
     global playerColor
-    data = json.loads(data)
     if data['color'] != 'false':
         playerColor = data['color']
 
 @sio.on('player')
 def on_message(data):
-    global gameInProgress, board
-    data = json.loads(data)
+    global gameInProgress, board,gameID
     if data['players'] >= 2:
         gameInProgress = True
-        window2.destroy()
+        gameID=data['roomId']
         sio.emit('play', data['roomId'])
 
-    board = parse_fen(data['fen'])
+    board = parse_fen(data['board'])
 
 @sio.on('move')
 def on_message(data):
     global board
-    data = json.loads(data)
     board = parse_fen(data['board'])
     clear_images()
     update_UI(board)
@@ -578,6 +565,7 @@ def click(event):
                 currentPlayer.config(text="Current turn: Black")
             else:
                 currentPlayer.config(text="Current turn: White")
+            sendMove()
         if (event.y//100,event.x//100) in possibleRocades and check_current_color(board[lastClicked[0]][lastClicked[1]]) == True:
             if board[event.y//100][event.x//100].isupper():
                 if event.x//100 == 7:
@@ -601,6 +589,7 @@ def click(event):
                 currentPlayer.config(text="Current turn: Black")
             else:
                 currentPlayer.config(text="Current turn: White")
+            sendMove()
 
     alive=False
     for loop in board:
@@ -714,7 +703,7 @@ Label(window2,text="Game ID: ").grid(column=0,row=0,padx=10,pady=10)
 gameIdString=StringVar()
 Entry(window2,textvariable=gameIdString,width=30).grid(column=1,row=0,padx=10,pady=10)
 Button(window2,text="Connect to this game ID",width=35,command=confirm_game_id).grid(column=0,row=1,columnspan=2,padx=10,pady=10)
-Button(window2,text="Create new game",width=35,command=request_to_server_new_game).grid(column=0,row=2,columnspan=2,padx=10,pady=10)
+Button(window2,text="Create new game",width=35,command=create_game).grid(column=0,row=2,columnspan=2,padx=10,pady=10)
 
 window2.mainloop()
 
@@ -749,3 +738,5 @@ window.bind("<Return>", confirm_case)
 ################## EXECTUTING THE GAME WINDOW ###############
 
 window.mainloop()
+
+sio.disconnect()
