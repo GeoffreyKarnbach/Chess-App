@@ -519,10 +519,13 @@ def click(event):
 
     #Function managing a click on the chessboard, no matter if it was a click to select a case or a click to confirm a move
 
-    global lastRect,lastCoords,modifiable,possiblePositions,lastClicked,currentColor,castlingStillPossible,towersMoved,possibleRocades,gameOver
+    global lastRect,lastCoords,modifiable,possiblePositions,lastClicked,currentColor,castlingStillPossible,towersMoved,possibleRocades,gameOver,playerColor
     if gameOver:
         return
-
+    if (playerColor == "white" and not currentColor) or (playerColor == "black" and currentColor):
+        pass
+    else:
+        return
     if modifiable:
         if [(event.x//100)*100+2,(event.y//100)*100+2,(event.x//100)*100+98,(event.y//100)*100+98] == lastCoords:
             lastClicked=[]
