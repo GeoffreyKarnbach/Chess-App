@@ -1,6 +1,10 @@
+################# IMPORTS ###############
+
 from tkinter import*
 import pyperclip
+from tkinter.messagebox import*
 
+################## VARIABLES #############
 lastRect=0
 lastCoords=[]
 modifiable=True
@@ -12,11 +16,13 @@ imagesGUI=[]
 
 castlingStillPossible=[True,True]
 towersMoved=[[] for loop in range(2)]
+gameOver=False
 
 currentColor = False # false == white, true == white
 
 lastClicked=[]
 
+##### CONSTANTS #######
 board=[["*" for lopp in range(8)] for loop in range(8)]
 board[0]=["r","n","b","q","k","b","n","r"]
 board[1]=["p" for loop in range(8)]
@@ -50,7 +56,12 @@ possibleMoves={"P":[(-1,0)],\
                     (1,0),(-1,0),\
                     (0,1),(0,-1)]}
 
+##################### GAME FUNCTION ###############
+
 def get_moves(position):
+
+    #Returns all the existing moves from a certain possition, no matter if they are valid
+
     global board
     moves=[]
     if board[position[1]][position[0]] != "*":
@@ -59,12 +70,24 @@ def get_moves(position):
             moves.append((loop[0]+position[1],loop[1]+position[0]))
     return moves
 
+def new_game():
+
+    #Resets all the variables and the UI
+
+    pass
+
 def signOf(number):
+
+    #Auxilary function to get the sign of a number
+
     if number > 0:
         return 1
     return -1
 
 def rochade(color, side):
+
+    # Executes the rochade
+
     global board
     if side == True:
         if color == True:
@@ -94,6 +117,9 @@ def rochade(color, side):
     update_UI(board)
 
 def rochade_possible(colorID):
+
+    #checks if would be possible
+
     global castlingStillPossible,board
     res=[]
     if colorID==0:
@@ -322,6 +348,9 @@ def show_moves(moves):
                     
                 
 def confirm_case(event):
+
+    #Locks the selected case by pressing the enter key, used to trigger the green possible cases
+
     global lastCoords,modifiable,possible,currentColor
     if lastCoords!=[]:
         if currentColor != board[(lastCoords[1]-2)//100][(lastCoords[0]-2)//100].isupper() and board[(lastCoords[1]-2)//100][(lastCoords[0]-2)//100] != "*":
@@ -336,6 +365,9 @@ def confirm_case(event):
         print("Select a case before confirming")
 
 def check_current_color(piece):
+
+    # Returns the color of a certain piece, depending on if it is upper or lower (FEN NOTATION)
+
     global currentColor
     if currentColor == True and piece.isupper() != True:
         return True
@@ -345,8 +377,11 @@ def check_current_color(piece):
         return False
 
 
-#Converts FEN string to array usable to draw board in tkinter | TODO: add who is playing at the end
+
 def parse_fen(fenString):
+
+    #Converts FEN string to array usable to draw board in tkinter | TODO: add who is playing at the end
+
     lines = fenString.split(' ')[0].split('/')
     for i in range(len(lines)):
         lines[i] = list(lines[i])
@@ -356,8 +391,11 @@ def parse_fen(fenString):
                     lines[i].insert(j+1, '*')
                 lines[i][j] = '*'
     return lines
-#Converts array to FEN string to send to server | TODO: add who is playing at the end
+
 def parse_board(board):
+
+    #Converts array to FEN string to send to server | TODO: add who is playing at the end
+
     fen = ''
     for i in range(8):
         star = 0
@@ -375,7 +413,13 @@ def parse_board(board):
     return fen
 
 def click(event):
-    global lastRect,lastCoords,modifiable,possiblePositions,lastClicked,currentColor,castlingStillPossible,towersMoved,possibleRocades
+
+    #Function managing a click on the chessboard, no matter if it was a click to select a case or a click to confirm a move
+
+    global lastRect,lastCoords,modifiable,possiblePositions,lastClicked,currentColor,castlingStillPossible,towersMoved,possibleRocades,gameOver
+    if gameOver:
+        return
+
     if modifiable:
         if [(event.x//100)*100+2,(event.y//100)*100+2,(event.x//100)*100+98,(event.y//100)*100+98] == lastCoords:
             lastClicked=[]
@@ -452,24 +496,25 @@ def click(event):
         if "k" in loop:
             alive=True
 
-    if alive:
-        print("OK black")
-    else:
-        print("Lost black")
+    if not alive:
+        gameOver=True
+        showinfo("Game Over","White won the game, by killing the black king.")
 
     alive=False
     for loop in board:
         if "K" in loop:
             alive=True
             
-    if alive:
-        print("OK white")
-    else:
-        print("Lost white")
+    if not alive:
+        gameOver=True
+        showinfo("Game Over","Black won the game, by killing the white king.")
 
 
 
 def update_UI(board):
+
+    #Updates the entire images on the board depending of the array, board
+
     global imagesRefs,imagesGUI
     for loop in range(8):
         for lopp in range(8):
@@ -482,6 +527,9 @@ def update_UI(board):
                 pass
 
 def draw_board():
+
+    # Draws the basic board (white and black cases)
+
     colors=["#f2d08a","white"]
     offset,current=0,0
     for loop in range(8):
@@ -492,12 +540,18 @@ def draw_board():
             current=(current+1)%2
 
 def clear_images():
+
+    #Removes all the current pieces on the board
+
     global imagesGUI
     for loop in imagesGUI:
         can.delete(loop)
     imagesGUI=[]
 
 def import_board():
+
+    #After pressing on a button on the program map-generator.py, possibility to easily import a new board
+
     global board,currentColor
     new_board=pyperclip.paste()
     board=eval(new_board)
@@ -506,6 +560,9 @@ def import_board():
     currentColor = False
 
 def reset_board():
+
+    # Resets the entire board
+
     global board,currentColor
     board=[["*" for lopp in range(8)] for loop in range(8)]
     board[0]=["r","n","b","q","k","b","n","r"]
@@ -516,6 +573,7 @@ def reset_board():
     update_UI(board)
     currentColor = False
 
+########### MAIN UI PART ##############
 
 window=Tk()
 window.title("Chess")
@@ -537,4 +595,7 @@ Button(window,text="Reset board",command = reset_board).grid(column=2,row=1,padx
 
 can.bind("<Button-1>",click)
 window.bind("<Return>", confirm_case)
+
+################## EXECTUTING THE GAME WINDOW ###############
+
 window.mainloop()
