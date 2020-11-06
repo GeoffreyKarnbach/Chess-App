@@ -379,10 +379,16 @@ def check_current_color(piece):
 
 
 def parse_fen(fenString):
+    global currentColor
+    #Converts FEN string to array usable to draw board in tkinter
+    splitString = fenString.split(' ')
+    lines = splitString[0].split('/')
 
-    #Converts FEN string to array usable to draw board in tkinter | TODO: add who is playing at the end
+    if splitString[1] == 'w':
+        currentColor = False
+    else:
+        currentColor = True
 
-    lines = fenString.split(' ')[0].split('/')
     for i in range(len(lines)):
         lines[i] = list(lines[i])
         for j in range(len(lines[i])):
@@ -394,7 +400,7 @@ def parse_fen(fenString):
 
 def parse_board(board):
 
-    #Converts array to FEN string to send to server | TODO: add who is playing at the end
+    #Converts array to FEN string to send to server
 
     fen = ''
     for i in range(8):
@@ -410,7 +416,10 @@ def parse_board(board):
                     star = 0
         if i != 7:
             fen+='/'
-    return fen
+    if currentColor == True:
+        return fen + ' b'
+    else:
+        return fen + ' w'
 
 def click(event):
 
