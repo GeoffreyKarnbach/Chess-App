@@ -608,12 +608,7 @@ def click(event):
 
     if not alive:
         gameOver=True
-
-        MsgBox = askquestion ('Game over','White won. Revanche?')
-        if MsgBox == 'yes':
-            new_game()
-        else:
-            window.destroy()
+        showinfo("White won.")
 
     alive=False
     for loop in board:
@@ -622,11 +617,7 @@ def click(event):
             
     if not alive:
         gameOver=True
-        MsgBox = askquestion ('Game over','Black won. Revanche?')
-        if MsgBox == 'yes':
-            new_game()
-        else:
-            window.destroy()
+        showinfo("Black won.")
 
 
 
@@ -735,12 +726,9 @@ can.grid(column=0,row=0,padx=25,pady=25,columnspan=3)
 draw_board()
 update_UI(board)
 
-Button(window,text="Import board",command = import_board).grid(column=0,row=1,padx=10,pady=10)
-
 currentPlayer=Label(window,text="Current turn: White")
 currentPlayer.grid(column=1,row=1,padx=10,pady=10)
 
-Button(window,text="Reset board",command = reset_board).grid(column=2,row=1,padx=10,pady=10)
 
 can.bind("<Button-1>",click)
 window.bind("<Return>", confirm_case)
