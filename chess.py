@@ -68,22 +68,26 @@ def rochade(color, side):
     global board
     if side == True:
         if color == True:
-            board[4][0] = '*'
-            board[6][0] = 'k'
-            board[5][0] = 'r'
+            board[0][4] = '*'
+            board[0][6] = 'k'
+            board[0][5] = 'r'
+            board[0][7] = '*'
         else:
-            board[4][7] = '*'
-            board[6][7] = 'K'
-            board[5][7] = 'R'
+            board[7][4] = '*'
+            board[7][6] = 'K'
+            board[7][5] = 'R'
+            board[7][7] = '*'
     else:
         if color == True:
-            board[4][0] = '*'
-            board[1][0] = 'k'
-            board[2][0] = 'r'
+            board[0][4] = '*'
+            board[0][1] = 'k'
+            board[0][2] = 'r'
+            board[0][0] = '*'
         else:
-            board[4][7] = '*'
-            board[1][7] = 'K'
-            board[2][7] = 'R'
+            board[7][4] = '*'
+            board[7][1] = 'K'
+            board[7][2] = 'R'
+            board[7][0] = '*'
     clear_images()
     update_UI(board)
 
