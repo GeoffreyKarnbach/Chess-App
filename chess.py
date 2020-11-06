@@ -74,7 +74,27 @@ def new_game():
 
     #Resets all the variables and the UI
 
-    pass
+    global board,lastRect,lastCoords,modifiable,imagesRefs,possible,possiblePositions,possibleRocades,imagesGUI,castlingStillPossible,towersMoved,gameOver,currentColor,lastClicked
+
+    clear_images()
+    reset_board()
+    update_UI(board)
+    print(board)
+
+    lastRect=0
+    lastCoords=[]
+    modifiable=True
+    possible=[]
+    possiblePositions=[]
+    possibleRocades=[]
+
+    castlingStillPossible=[True,True]
+    towersMoved=[[] for loop in range(2)]
+    gameOver=False
+
+    currentColor = False # false == white, true == white
+
+    lastClicked=[]
 
 def signOf(number):
 
@@ -507,7 +527,12 @@ def click(event):
 
     if not alive:
         gameOver=True
-        showinfo("Game Over","White won the game, by killing the black king.")
+
+        MsgBox = askquestion ('Game over','White won. Revanche?')
+        if MsgBox == 'yes':
+            new_game()
+        else:
+            window.destroy()
 
     alive=False
     for loop in board:
@@ -516,7 +541,11 @@ def click(event):
             
     if not alive:
         gameOver=True
-        showinfo("Game Over","Black won the game, by killing the white king.")
+        MsgBox = askquestion ('Game over','Black won. Revanche?')
+        if MsgBox == 'yes':
+            new_game()
+        else:
+            window.destroy()
 
 
 
@@ -525,6 +554,8 @@ def update_UI(board):
     #Updates the entire images on the board depending of the array, board
 
     global imagesRefs,imagesGUI
+
+    print(board)
     for loop in range(8):
         for lopp in range(8):
             try:
