@@ -5,6 +5,7 @@ import pyperclip
 from tkinter.messagebox import*
 import socketio
 import sys
+import json
 
 ################## VARIABLES #############
 
@@ -17,6 +18,8 @@ possible=[]
 possiblePositions=[]
 possibleRocades=[]
 imagesGUI=[]
+
+gameInProgress = False
 
 castlingStillPossible=[True,True]
 towersMoved=[[] for loop in range(2)]
@@ -35,6 +38,9 @@ board[7]=["R","N","B","Q","K","B","N","R"]
 #### NETWORK #####
 
 gameID=""
+playerColor = ''
+sio = socketio.Client()
+sio.connect('http://193.80.95.47:8080/')
 
 
 ##### CONSTANTS #######
@@ -85,6 +91,50 @@ def confirm_game_id():
     print(gameIdString.get())
     gameID="2"
     window2.destroy()
+
+##################### SOCKET HANDLING #############
+
+def join_game(id):
+    sio.emit('joined', {id})
+
+def create_game():
+    sio.emit('create', {'t':'t'})
+
+@sio.on('roomIdMsg')
+def on_message(data):
+    global gameID
+    gameID = data
+
+@sio.on('color')
+def on_message(data):
+    global playerColor
+    data = json.loads(data)
+    if data['color'] != 'false':
+        playerColor = data['color']
+
+@sio.on('player')
+def on_message(data):
+    global gameInProgress, board
+    data = json.loads(data)
+    if data['players'] >= 2:
+        gameInProgress = True
+        window2.destroy()
+        sio.emit('play', data['roomId'])
+
+    board = parse_fen(data['fen'])
+
+@sio.on('move')
+def on_message(data):
+    global board
+    data = json.loads(data)
+    board = parse_fen(data['board'])
+    clear_images()
+    update_UI(board)
+
+def sendMove():
+    global board, gameID
+    sio.emit('move', {'board': parse_board(board), 'room': gameID})
+
 
 ##################### GAME FUNCTION ###############
 
@@ -425,7 +475,7 @@ def check_current_color(piece):
         return False
 
 
-def parse_fen(fenString): # GASTLING
+def parse_fen(fenString): # CASTLING
     global currentColor
     #Converts FEN string to array usable to draw board in tkinter
     splitString = fenString.split(' ')
@@ -445,7 +495,7 @@ def parse_fen(fenString): # GASTLING
                 lines[i][j] = '*'
     return lines
 
-def parse_board(board): # GASTLING
+def parse_board(board): # CASTLING
 
     #Converts array to FEN string to send to server
 
