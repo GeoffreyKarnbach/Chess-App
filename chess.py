@@ -69,11 +69,22 @@ possibleMoves={"P":[(-1,0)],\
 ######################## JOIN UI ######################
 
 def join_window():
-
     pass
 
 def cancel_game():
     sys.exit("No game joined but join window closed.")
+
+def request_to_server_new_game():
+    global gameID
+    print("Asking server for new ID")
+    gameID="2"
+    window2.destroy()
+    
+def confirm_game_id():
+    global gameID
+    print(gameIdString.get())
+    gameID="2"
+    window2.destroy()
 
 ##################### GAME FUNCTION ###############
 
@@ -652,8 +663,8 @@ window2.title("Server connection")
 Label(window2,text="Game ID: ").grid(column=0,row=0,padx=10,pady=10)
 gameIdString=StringVar()
 Entry(window2,textvariable=gameIdString,width=30).grid(column=1,row=0,padx=10,pady=10)
-Button(window2,text="Connect to this game ID",width=35).grid(column=0,row=1,columnspan=2,padx=10,pady=10)
-Button(window2,text="Create new game",width=35).grid(column=0,row=2,columnspan=2,padx=10,pady=10)
+Button(window2,text="Connect to this game ID",width=35,command=confirm_game_id).grid(column=0,row=1,columnspan=2,padx=10,pady=10)
+Button(window2,text="Create new game",width=35,command=request_to_server_new_game).grid(column=0,row=2,columnspan=2,padx=10,pady=10)
 
 window2.mainloop()
 
