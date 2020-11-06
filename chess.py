@@ -473,14 +473,17 @@ def parse_fen(fenString): # CASTLING
     else:
         currentColor = True
 
+    board=[[] for loop in range(8)]
+
     for i in range(len(lines)):
-        lines[i] = list(lines[i])
         for j in range(len(lines[i])):
             if lines[i][j].isdigit() == True:
-                for k in range(int(lines[i][j])-1):
-                    lines[i].insert(j+1, '*')
-                lines[i][j] = '*'
-    return lines
+                for k in range(int(lines[i][j])):
+                    board[i].append('*')
+            else:
+                board[i].append(lines[i][j])
+
+    return board
 
 def parse_board(board): # CASTLING
 
@@ -492,18 +495,24 @@ def parse_board(board): # CASTLING
         for j in range(8):
             if board[i][j] == '*':
                 star+=1
-            elif star == 0 and board[i][j] != '*':
+
+            if star == 0 and board[i][j] != '*':
                 fen+=board[i][j]
-            elif star != 0 and board[i][j] != '*':
-                if board[i][j] != '*' or j == 7:
-                    fen+=str(star)
-                    fen+=board[i][j]
-                    star = 0
+
+            if star != 0 and board[i][j] != '*':
+                fen+=str(star)
+                fen+=board[i][j]
+                star = 0
+        if star != 0:
+            fen+=str(star)
         if i != 7:
             fen+='/'
+
     if currentColor == True:
+        print(fen)
         return fen + ' b'
     else:
+        print(fen)
         return fen + ' w'
 
 def click(event):
