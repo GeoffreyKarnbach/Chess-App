@@ -1,6 +1,7 @@
 ################# IMPORTS ###############
 
 from tkinter import*
+from typing import cast
 import pyperclip
 from tkinter.messagebox import*
 import socketio
@@ -473,6 +474,16 @@ def parse_fen(fenString): # CASTLING
     else:
         currentColor = True
 
+    castlingVar = splitString[2].split('-')
+    if splitString[2].split('-')[0] == 'True':
+        castlingStillPossible[0] = True
+    else:
+        castlingStillPossible[0] = False
+    if splitString[2].split('-')[1] == 'True':
+        castlingStillPossible[1] = True
+    else:
+        castlingStillPossible[1] = False
+
     board=[[] for loop in range(8)]
 
     for i in range(len(lines)):
@@ -510,10 +521,10 @@ def parse_board(board): # CASTLING
 
     if currentColor == True:
         print(fen)
-        return fen + ' b'
+        return fen + ' b' + castlingStillPossible[0] + '-' + castlingStillPossible[1]
     else:
         print(fen)
-        return fen + ' w'
+        return fen + ' w' + castlingStillPossible[0] + '-' + castlingStillPossible[1]
 
 def click(event):
 
