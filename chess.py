@@ -475,14 +475,27 @@ def parse_fen(fenString): # CASTLING
         currentColor = True
 
     castlingVar = splitString[2].split('-')
-    if splitString[2].split('-')[0] == 'True':
-        castlingStillPossible[0] = True
+
+    castlingVarintern = castlingVar[0].split('/')
+    if castlingVarintern[0] == 'True':
+        castlingStillPossible[0][0] = True
     else:
-        castlingStillPossible[0] = False
-    if splitString[2].split('-')[1] == 'True':
-        castlingStillPossible[1] = True
+        castlingStillPossible[0][0] = False
+    if castlingVarintern[1] == 'True':
+        castlingStillPossible[0][1] = True
     else:
-        castlingStillPossible[1] = False
+        castlingStillPossible[0][1] = False
+
+    castlingVarintern = castlingVar[1].split('/')
+    if castlingVarintern[0] == 'True':
+        castlingStillPossible[1][0] = True
+    else:
+        castlingStillPossible[1][0] = False
+    if castlingVarintern[1] == 'True':
+        castlingStillPossible[1][1] = True
+    else:
+        castlingStillPossible[1][1] = False
+    
 
     board=[[] for loop in range(8)]
 
@@ -524,7 +537,7 @@ def parse_board(board): # CASTLING
         return fen + ' b' + castlingStillPossible[0] + '-' + castlingStillPossible[1]
     else:
         print(fen)
-        return fen + ' w' + castlingStillPossible[0] + '-' + castlingStillPossible[1]
+        return fen + ' w' + castlingStillPossible[0][0] + '/' + castlingStillPossible[0][1] + '-' + castlingStillPossible[1][0] + '/' + castlingStillPossible[1][1]
 
 def click(event):
 
